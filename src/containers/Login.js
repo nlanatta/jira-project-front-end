@@ -2,15 +2,17 @@ import React, { Component } from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import "./Login.css";
 import LoaderButton from "../components/LoaderButton";
+import LoaderBackground from "../components/LoaderBackground";
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      email: "",
+      user: "",
       password: "",
-      isLoading: false
+      isLoading: false,
+      cookie: ""
     };
   }
 
@@ -30,7 +32,7 @@ export default class Login extends Component {
     this.setState({ isLoading: true });
 
     try {
-      await this.login(this.state.email, this.state.password);
+      await this.login(this.state.user, this.state.password);
       this.props.userHasAuthenticated(true)
       this.props.history.push("/");
     } catch (e) {
@@ -40,19 +42,21 @@ export default class Login extends Component {
   }
   
   login(user, password) {
-    return user+" / "+password;
+    user+" / "+password;
+    var loginCall = new LoaderBackground();
+    this.state.cookie = loginCall.loginCall(user, password);
   } 
 
   render() {
     return (
       <div className="Login">
         <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="email" bsSize="large">
-            <ControlLabel>Email</ControlLabel>
+          <FormGroup controlId="user" bsSize="large">
+            <ControlLabel>User</ControlLabel>
             <FormControl
               autoFocus
-              type="email"
-              value={this.state.email}
+              type="text"
+              value={this.state.user}
               onChange={this.handleChange}
             />
           </FormGroup>
@@ -73,7 +77,7 @@ export default class Login extends Component {
             text="Login"
             loadingText="Logging in…"
           /> 
-        </form>
+        </form>        
       </div>
     );
   }
