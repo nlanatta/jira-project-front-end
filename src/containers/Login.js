@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import "./Login.css";
-import LoaderButton from "../components/LoaderButton";
-import LoaderBackground from "../components/LoaderBackground";
+import AppButton from "../components/AppButton";
+import LoaderEndpoint from "../endpoint/LoaderEndpoint";
 
 export default class Login extends Component {
   constructor(props) {
@@ -17,7 +17,7 @@ export default class Login extends Component {
   }
 
   validateForm() {
-    return this.state.email.length > 0 && this.state.password.length > 0;
+    return this.state.user.length > 0 && this.state.password.length > 0;
   }
 
   handleChange = event => {
@@ -34,7 +34,7 @@ export default class Login extends Component {
     try {
       await this.login(this.state.user, this.state.password);
       this.props.userHasAuthenticated(true)
-      this.props.history.push("/");
+      this.props.history.push("/jiraQuery");
     } catch (e) {
       alert(e);
       this.setState({ isLoading: false });
@@ -43,7 +43,7 @@ export default class Login extends Component {
   
   login(user, password) {
     user+" / "+password;
-    var loginCall = new LoaderBackground();
+    var loginCall = new LoaderEndpoint();
     this.state.cookie = loginCall.loginCall(user, password);
   } 
 
@@ -68,7 +68,7 @@ export default class Login extends Component {
               type="password"
             />
           </FormGroup>
-          <LoaderButton
+          <AppButton
             block
             bsSize="large"
             disabled={!this.validateForm()}
